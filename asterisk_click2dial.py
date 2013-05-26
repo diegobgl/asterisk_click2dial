@@ -422,7 +422,7 @@ class asterisk_common(orm.AbstractModel):
         #print "RESULT generic_phonenumber_to_e164", result
         return result
 
-    def generic_reformat_phonenumbers(self, cr, uid, vals, phonefields=['phone', 'partner_phone', 'fax', 'mobile'], context=None):
+    def _generic_reformat_phonenumbers(self, cr, uid, vals, phonefields=['phone', 'partner_phone', 'fax', 'mobile'], context=None):
         """Reformat phone numbers in international format i.e. +33141981242"""
         if any([vals.get(field) for field in phonefields]):
             user = self.pool['res.users'].browse(cr, uid, uid, context=context)
@@ -468,12 +468,12 @@ class res_partner(osv.osv):
 
 
     def create(self, cr, uid, vals, context=None):
-        vals_reformated = self.generic_reformat_phonenumbers(cr, uid, vals, context=context)
+        vals_reformated = self._generic_reformat_phonenumbers(cr, uid, vals, context=context)
         return super(res_partner, self).create(cr, uid, vals_reformated, context=context)
 
 
     def write(self, cr, uid, ids, vals, context=None):
-        vals_reformated = self.generic_reformat_phonenumbers(cr, uid, vals, context=context)
+        vals_reformated = self._generic_reformat_phonenumbers(cr, uid, vals, context=context)
         return super(res_partner, self).write(cr, uid, ids, vals_reformated, context=context)
 
 
